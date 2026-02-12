@@ -13,7 +13,7 @@
 					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.10"
+						"string" : "3.18"
 					},
 					"projectIndex" : 0,
 					"source" : "."
@@ -23,14 +23,15 @@
 					"jsonFile" : "directory-RedeNeural-Debug-89e8b3cbe647ef0c0b4d.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.12"
+						"string" : "3.18"
 					},
 					"parentIndex" : 0,
 					"projectIndex" : 1,
 					"source" : "RedeNeural",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -57,7 +58,8 @@
 					"parentIndex" : 0,
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -66,8 +68,15 @@
 				{
 					"directoryIndex" : 1,
 					"id" : "RedeNeural::@cee6a02757e722b28950",
-					"jsonFile" : "target-RedeNeural-Debug-86e97ac87c13731fb7ca.json",
+					"jsonFile" : "target-RedeNeural-Debug-b93ba7f64fab1e3b43b1.json",
 					"name" : "RedeNeural",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "teste_cuda::@cee6a02757e722b28950",
+					"jsonFile" : "target-teste_cuda-Debug-1272957bbc964adaebfe.json",
+					"name" : "teste_cuda",
 					"projectIndex" : 1
 				}
 			]
