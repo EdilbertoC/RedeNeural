@@ -1,8 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"C:/Projetos/Pessoais/RedeNeural/out/build/x64-debug/cmake_install.cmake",
-		"C:/Projetos/Pessoais/RedeNeural/out/build/x64-debug/RedeNeural/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

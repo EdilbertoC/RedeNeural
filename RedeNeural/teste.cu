@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <cuda_runtime.h>
 #include <chrono>
+#include <locale.h>
 
 __global__ void test_cuda(float* d_out, int iterations) {
     int idx = threadIdx.x + blockIdx.x * blockDim.x;
@@ -15,10 +16,12 @@ __global__ void test_cuda(float* d_out, int iterations) {
 }
 
 int main() {
+    setlocale(LC_NUMERIC, "");
     int blocks_count = 120;
     int threads_count = 256;
     int times = 1;
-    int iterations = 10'000;
+    int iterations = 1'000'000;
+    long long calculations_count = (long long)blocks_count * threads_count * iterations;
 
     cudaDeviceProp prop;
     cudaGetDeviceProperties(&prop, 0);
@@ -46,6 +49,8 @@ int main() {
 
     
     printf("------------------------------------------------\n");
-    printf("Test completed: %fms\n", benchmark);
+    printf("Test completed: %'fms\n", benchmark);
+    printf("Calculations: %'lld\n", calculations_count);
+    printf("Calculations per ms: %'f\n", calculations_count / benchmark);
     return 0;
 }
