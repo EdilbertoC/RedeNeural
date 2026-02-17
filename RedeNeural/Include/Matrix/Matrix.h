@@ -14,11 +14,9 @@ namespace ann {
 		~Matrix();
 		int get_rows_count() const;
 		int get_cols_count() const;
-		float get_element_at(int row, int col) const;
-		void set_element_at(int row, int col, float value);
 		ann::Matrix operator*(ann::Matrix my);
 		ann::Matrix operator+(ann::Matrix my);
-
+		float& operator()(int x, int y);
 	};
 }
 

@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void DrawMatriz(const ann::Matrix& matriz, int x, int y, int tamanho_celula);
+void DrawMatriz(ann::Matrix& matriz, int x, int y, int tamanho_celula);
 
 int main()
 {
@@ -47,8 +47,8 @@ int main()
 		}*/
 
 		if (IsKeyDown(KEY_SPACE)) {
-			mZ.set_element_at(0, 0, GetRandomValue(0, 1));
-			mZ.set_element_at(1, 0, GetRandomValue(0, 1));
+			mZ(0, 0) = GetRandomValue(0, 1);
+			mZ(1, 0) = GetRandomValue(0, 1);
 			result = l1.activation(mZ);
 		}
 
@@ -68,7 +68,7 @@ int main()
 	return 0;
 }
 
-void DrawMatriz(const ann::Matrix& matriz, int x, int y, int tamanho_celula) {
+void DrawMatriz(ann::Matrix& matriz, int x, int y, int tamanho_celula) {
 	int espacamento_celula = tamanho_celula / 2;
 	int tamanho_font = tamanho_celula / 2;
 
@@ -85,25 +85,7 @@ void DrawMatriz(const ann::Matrix& matriz, int x, int y, int tamanho_celula) {
 			int cell_x = (j * tamanho_celula) + (j * espacamento_celula) + (tamanho_celula / 2) + largura_inicial;
 
 			//DrawCircle(cell_x, cell_y, tamanho_celula / 2, RED);
-			DrawText(TextFormat("%.0f", matriz.get_element_at(i, j)), cell_x - tamanho_font, cell_y - tamanho_font / 2, tamanho_font, WHITE);
+			DrawText(TextFormat("%.0f", matriz(i, j)), cell_x - tamanho_font, cell_y - tamanho_font / 2, tamanho_font, WHITE);
 		}
 	}
-}
-
-ann::Matrix multplicarMatrizes(ann::Matrix x, ann::Matrix y) {
-	if (x.get_cols_count() != y.get_rows_count()) {
-		throw std::invalid_argument("Invalid multiplication");
-	}
-
-	ann::Matrix resultado(x.get_rows_count(), y.get_cols_count());
-	for (int linhaResultado = 0; linhaResultado < resultado.get_rows_count(); linhaResultado++) {
-		for (int colunaResultado = 0; colunaResultado < resultado.get_cols_count(); colunaResultado++) {
-			int elemento = 0;
-			for (int colunaX = 0; colunaX < x.get_cols_count(); colunaX++) {
-				elemento += x.get_element_at(linhaResultado, colunaX) * y.get_element_at(colunaX, colunaResultado);
-			}
-			resultado.set_element_at(linhaResultado, colunaResultado, elemento);
-		}
-	}
-	return resultado;
 }

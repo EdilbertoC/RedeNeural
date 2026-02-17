@@ -71,9 +71,9 @@ ann::Matrix map_matrix(ann::Matrix& matrix, std::function<float(float)> func) {
 	ann::Matrix result(matrix.get_rows_count(), matrix.get_cols_count());
 	for (int i = 0; i < matrix.get_rows_count(); i++) {
 		for (int j = 0; j < matrix.get_cols_count(); j++) {
-			float element = matrix.get_element_at(i, j);
+			float element = matrix(i, j);
 			element = func(element);
-			result.set_element_at(i, j, element);
+			result(i, j) = element;
 		}
 	}
 	return result;

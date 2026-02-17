@@ -23,29 +23,26 @@ int ann::Matrix::get_rows_count() const {
 	return rows;
 }
 
-float ann::Matrix::get_element_at(int row, int col) const {
-	return elements[row * cols + col];
-}
-
-void ann::Matrix::set_element_at(int row, int col, float value) {
-	elements[row * cols + col] = value;
+float& ann::Matrix::operator()(int x, int y)
+{
+	return elements[x * cols + y];
 }
 
 ann::Matrix ann::Matrix::operator*(ann::Matrix my)
 {
-	ann::Matrix x = *this;
-	if (x.get_cols_count() != my.get_rows_count()) {
+	ann::Matrix mx = *this;
+	if (mx.get_cols_count() != my.get_rows_count()) {
 		throw std::invalid_argument("Invalid multiplication.");
 	}
 
-	ann::Matrix result(x.get_rows_count(), my.get_cols_count());
+	ann::Matrix result(mx.get_rows_count(), my.get_cols_count());
 	for (int row_result = 0; row_result < result.get_rows_count(); row_result++) {
 		for (int col_result = 0; col_result < result.get_cols_count(); col_result++) {
 			int element = 0;
-			for (int colunaX = 0; colunaX < x.get_cols_count(); colunaX++) {
-				element += x.get_element_at(row_result, colunaX) * my.get_element_at(colunaX, col_result);
+			for (int colunaX = 0; colunaX < mx.get_cols_count(); colunaX++) {
+				element += mx(row_result, colunaX) * my(colunaX, col_result);
 			}
-			result.set_element_at(row_result, col_result, element);
+			result(row_result, col_result) = element;
 		}
 	}
 	return result;
@@ -63,8 +60,8 @@ ann::Matrix ann::Matrix::operator+(ann::Matrix my)
 	{
 		for (int col_result = 0; col_result < result.get_cols_count(); col_result++)
 		{
-			float sum = mx.get_element_at(row_result, col_result) + my.get_element_at(row_result, col_result);
-			result.set_element_at(row_result, col_result, sum);
+			float sum = mx(row_result, col_result) + my(row_result, col_result);
+			result(row_result, col_result) = sum;
 		}
 	}
 	return result;
