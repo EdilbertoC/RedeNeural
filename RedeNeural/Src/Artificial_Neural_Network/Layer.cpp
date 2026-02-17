@@ -63,20 +63,7 @@ ann::Matrix ann::Layer::activation(ann::Matrix& input)
 	}
 
 	ann::Matrix result = weights_ * input + bias_;
-	result = map_matrix(result, sigmoid);
-	return result;
-}
-
-ann::Matrix map_matrix(ann::Matrix& matrix, std::function<float(float)> func) {
-	ann::Matrix result(matrix.get_rows_count(), matrix.get_cols_count());
-	for (int i = 0; i < matrix.get_rows_count(); i++) {
-		for (int j = 0; j < matrix.get_cols_count(); j++) {
-			float element = matrix(i, j);
-			element = func(element);
-			result(i, j) = element;
-		}
-	}
-	return result;
+	return result.map(sigmoid);
 }
 
 float sigmoid(float x) {
