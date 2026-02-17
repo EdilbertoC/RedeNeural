@@ -4,20 +4,21 @@ namespace ann {
 	class Matrix
 	{
 	private:
-		int linhas;
-		int colunas;
-		std::vector<double> elementos;
+		int rows;
+		int cols;
+		std::vector<float> elements;
 
 	public:
-		Matrix(int linhas, int colunas);
-		Matrix(int linhas, int colunas, std::vector<double> elementos);
+		Matrix(int rows, int cols);
+		Matrix(int rows, int cols, std::vector<float> elements);
 		~Matrix();
 		int get_rows_count() const;
 		int get_cols_count() const;
-		double get_element_at(int linha, int coluna) const;
-		void set_element_at(int linha, int coluna, double valor);
-		ann::Matrix operator*(ann::Matrix mx);
+		float get_element_at(int row, int col) const;
+		void set_element_at(int row, int col, float value);
+		ann::Matrix operator*(ann::Matrix my);
 		ann::Matrix operator+(ann::Matrix my);
+
 	};
 }
 

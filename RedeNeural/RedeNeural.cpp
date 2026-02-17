@@ -7,7 +7,6 @@
 
 using namespace std;
 
-ann::Matrix multplicarMatrizes(ann::Matrix x, ann::Matrix y);
 void DrawMatriz(const ann::Matrix& matriz, int x, int y, int tamanho_celula);
 
 int main()
