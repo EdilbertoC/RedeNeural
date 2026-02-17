@@ -62,27 +62,9 @@ ann::Matrix ann::Layer::activation(ann::Matrix& input)
 
 	}
 
-	ann::Matrix input_weight = multiply_matrices(weights_, input);
+	ann::Matrix input_weight = weights_ * input;
 	ann::Matrix result = sum_matrices(input_weight, bias_);
 	result = map_matrix(result, sigmoid);
-	return result;
-}
-
-ann::Matrix multiply_matrices(ann::Matrix& x, ann::Matrix& y) {
-	if (x.get_cols_count() != y.get_rows_count()) {
-		throw std::invalid_argument("Invalid multiplication.");
-	}
-
-	ann::Matrix result(x.get_rows_count(), y.get_cols_count());
-	for (int row_result = 0; row_result < result.get_rows_count(); row_result++) {
-		for (int col_result = 0; col_result < result.get_cols_count(); col_result++) {
-			int element = 0;
-			for (int colunaX = 0; colunaX < x.get_cols_count(); colunaX++) {
-				element += x.get_element_at(row_result, colunaX) * y.get_element_at(colunaX, col_result);
-			}
-			result.set_element_at(row_result, col_result, element);
-		}
-	}
 	return result;
 }
 

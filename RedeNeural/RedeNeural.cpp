@@ -1,7 +1,7 @@
 ﻿#include "raylib.h"
 #include "RedeNeural.h"
-#include "Matrix/Matrix.h"
-#include "Artificial_Neural_Network/Layer.h"
+#include "Include/Matrix/Matrix.h"
+#include "Include/Artificial_Neural_Network/Layer.h"
 #include <cmath>
 
 
@@ -19,17 +19,17 @@ int main()
 
 	ann::Matrix mX(2, 2, std::vector<double>{
 		1, 1,
-			1, 1
+		1, 1
 	});
 
 	ann::Matrix mZ(2, 1, std::vector<double>{
 		1,
-			0
+		0
 	});
 
 	ann::Matrix bias(2, 1, std::vector<double>{
 		-1,
-			0
+		0
 	});
 
 	ann::Layer l1(2, 2, mX, bias);
@@ -92,7 +92,7 @@ void DrawMatriz(const ann::Matrix& matriz, int x, int y, int tamanho_celula) {
 }
 
 ann::Matrix multplicarMatrizes(ann::Matrix x, ann::Matrix y) {
-	if (x.get_rows_count() != y.get_cols_count()) {
+	if (x.get_cols_count() != y.get_rows_count()) {
 		throw std::invalid_argument("Invalid multiplication");
 	}
 

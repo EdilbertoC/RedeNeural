@@ -16,6 +16,7 @@ namespace ann {
 		int get_cols_count() const;
 		double get_element_at(int linha, int coluna) const;
 		void set_element_at(int linha, int coluna, double valor);
+		ann::Matrix operator*(ann::Matrix mx);
 	};
 }
 
