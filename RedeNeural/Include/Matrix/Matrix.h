@@ -17,6 +17,7 @@ namespace ann {
 		double get_element_at(int linha, int coluna) const;
 		void set_element_at(int linha, int coluna, double valor);
 		ann::Matrix operator*(ann::Matrix mx);
+		ann::Matrix operator+(ann::Matrix my);
 	};
 }
 

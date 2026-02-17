@@ -51,6 +51,25 @@ ann::Matrix ann::Matrix::operator*(ann::Matrix mx)
 	return result;
 }
 
+ann::Matrix ann::Matrix::operator+(ann::Matrix my)
+{
+	ann::Matrix mx = *this;
+	if (mx.get_cols_count() != my.get_cols_count() || mx.get_rows_count() != my.get_rows_count())
+	{
+		throw std::invalid_argument("Invalid Addition");
+	}
+	ann::Matrix result(mx.get_rows_count(), mx.get_cols_count());
+	for (int row_result = 0; row_result < result.get_rows_count(); row_result++)
+	{
+		for (int col_result = 0; col_result < result.get_cols_count(); col_result++)
+		{
+			double sum = mx.get_element_at(row_result, col_result) + my.get_element_at(row_result, col_result);
+			result.set_element_at(row_result, col_result, sum);
+		}
+	}
+	return result;
+}
+
 ann::Matrix::~Matrix() {
 	std::cout << "Matrix deleted!\n";
 }
