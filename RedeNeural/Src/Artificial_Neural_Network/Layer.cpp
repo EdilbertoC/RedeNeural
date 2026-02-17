@@ -5,8 +5,8 @@
 
 ann::Matrix multiply_matrices(ann::Matrix& x, ann::Matrix& y);
 ann::Matrix sum_matrices(ann::Matrix& x, ann::Matrix& y);
-ann::Matrix map_matrix(ann::Matrix& matrix, std::function<double(double)> func);
-double sigmoid(double x);
+ann::Matrix map_matrix(ann::Matrix& matrix, std::function<float(float)> func);
+float sigmoid(float x);
 
 
 ann::Layer::Layer(int neuron_count, int weight_count)
@@ -67,11 +67,11 @@ ann::Matrix ann::Layer::activation(ann::Matrix& input)
 	return result;
 }
 
-ann::Matrix map_matrix(ann::Matrix& matrix, std::function<double(double)> func) {
+ann::Matrix map_matrix(ann::Matrix& matrix, std::function<float(float)> func) {
 	ann::Matrix result(matrix.get_rows_count(), matrix.get_cols_count());
 	for (int i = 0; i < matrix.get_rows_count(); i++) {
 		for (int j = 0; j < matrix.get_cols_count(); j++) {
-			double element = matrix.get_element_at(i, j);
+			float element = matrix.get_element_at(i, j);
 			element = func(element);
 			result.set_element_at(i, j, element);
 		}
@@ -79,7 +79,7 @@ ann::Matrix map_matrix(ann::Matrix& matrix, std::function<double(double)> func) 
 	return result;
 }
 
-double sigmoid(double x) {
+float sigmoid(float x) {
 	return 1 / (1 + (std::exp(-x)));
 }
 
