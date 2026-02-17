@@ -16,9 +16,13 @@ set(SOURCES
     "Include/Matrix/Matrix.h"
     "Include/Artificial_Neural_Network/Layer.h"
     "Src/Artificial_Neural_Network/Layer.cpp"
+        Src/Matrix/TensorComputeCore.cpp
+        Include/Matrix/TensorComputeCore.h
+        Src/Matrix/TensorComputeCore.cpp
 )
 
-add_executable(RedeNeural ${SOURCES})
+add_executable(RedeNeural ${SOURCES}
+        Include/Matrix/TensorComputeCore.h)
 
 
 target_include_directories(RedeNeural PRIVATE 

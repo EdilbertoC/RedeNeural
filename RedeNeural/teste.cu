@@ -11,13 +11,13 @@ __global__ void test_cuda(float* d_out, int iterations) {
     }
 
     if (idx < 30720) {
-        d_out[idx] = val;
+        *(d_out + idx) = val;
     }
 }
 
 int main() {
     setlocale(LC_NUMERIC, "");
-    int blocks_count = 120;
+    int blocks_count = 300;
     int threads_count = 256;
     int times = 1;
     int iterations = 1'000'000;
@@ -38,18 +38,22 @@ int main() {
 
     cudaEventRecord(start);
     for (int i = 0; i < times; i++) {
-        test_cuda << <blocks_count, threads_count >> > (d_ptr, iterations);
+        test_cuda <<<blocks_count, threads_count >>> (d_ptr, iterations);
     }
+
+    float* result_test = new float[blocks_count * threads_count];
+    cudaMemcpy(result_test, d_ptr, size, cudaMemcpyDeviceToHost);
+
     cudaEventRecord(stop);
     cudaFree(d_ptr);
-
     cudaEventSynchronize(stop);
+
     float benchmark = 0;
     cudaEventElapsedTime(&benchmark, start, stop);
-
     
     printf("------------------------------------------------\n");
     printf("Test completed: %'fms\n", benchmark);
+    printf("Exemple: %'f\n", result_test[1]);
     printf("Calculations: %'lld\n", calculations_count);
     printf("Calculations per ms: %'f\n", calculations_count / benchmark);
     return 0;
