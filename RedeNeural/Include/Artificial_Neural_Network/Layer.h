@@ -10,8 +10,8 @@ namespace ann {
 		ann::Matrix weights_;
 		ann::Matrix bias_;
 	public:
-		Layer(int neuron_count, int weight_count);
-		Layer(int neuron_count, int weight_count, ann::Matrix weights, ann::Matrix bias);
+		Layer(int neuron_count, int weight_count, ProcessingType processing);
+		Layer(int neuron_count, int weight_count, ann::Matrix& weights, ann::Matrix& bias);
 		int get_neuron_count();
 		int get_weight_count();
 		ann::Matrix get_weights();

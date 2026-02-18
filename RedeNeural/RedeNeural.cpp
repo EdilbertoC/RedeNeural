@@ -16,17 +16,17 @@ int main()
 	InitWindow(1200, 1000, "Rede Neural");
 	SetTargetFPS(144);
 
-	ann::Matrix mX(2, 2, std::vector<float>{
+	ann::Matrix mX(2, 2, ann::ProcessingType::Host,  std::vector<float>{
 		1, 1,
 		1, 1
 	});
 
-	ann::Matrix mZ(2, 1, std::vector<float>{
+	ann::Matrix mZ(2, 1, ann::ProcessingType::Host, std::vector<float>{
 		1,
 		0
 	});
 
-	ann::Matrix bias(2, 1, std::vector<float>{
+	ann::Matrix bias(2, 1, ann::ProcessingType::Host, std::vector<float>{
 		-1,
 		0
 	});

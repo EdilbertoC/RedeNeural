@@ -18,6 +18,7 @@ set(SOURCES
         "Src/Artificial_Neural_Network/Layer.cpp"
         "Src/Matrix/TensorComputeCore.cpp"
         "Include/Matrix/TensorComputeCore.h"
+        Include/Matrix/ProcessingType.h
 )
 
 add_executable(RedeNeural ${SOURCES})

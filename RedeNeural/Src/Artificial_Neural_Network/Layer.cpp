@@ -3,21 +3,17 @@
 #include <functional>
 #include <cmath>
 
-ann::Matrix multiply_matrices(ann::Matrix& x, ann::Matrix& y);
-ann::Matrix sum_matrices(ann::Matrix& x, ann::Matrix& y);
-ann::Matrix map_matrix(ann::Matrix& matrix, std::function<float(float)> func);
 float sigmoid(float x);
 
-
-ann::Layer::Layer(int neuron_count, int weight_count)
+ann::Layer::Layer(int neuron_count, int weight_count, ProcessingType processing)
 	: neuron_count_(neuron_count),
 	weight_count_(weight_count),
-	weights_(ann::Matrix(neuron_count, weight_count)),
-	bias_(ann::Matrix(neuron_count, 1))
+	weights_(ann::Matrix(neuron_count, weight_count, processing)),
+	bias_(ann::Matrix(neuron_count, 1, processing))
 {
 }
 
-ann::Layer::Layer(int neuron_count, int weight_count, ann::Matrix weights, ann::Matrix bias)
+ann::Layer::Layer(int neuron_count, int weight_count, ann::Matrix& weights, ann::Matrix& bias)
 	: neuron_count_(neuron_count), weight_count_(weight_count), weights_(weights), bias_(bias)
 {
 }
