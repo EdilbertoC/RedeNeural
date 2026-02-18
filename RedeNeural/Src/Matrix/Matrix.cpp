@@ -28,12 +28,17 @@ int ann::Matrix::get_rows_count() const
     return rows_;
 }
 
-float& ann::Matrix::operator()(int x, int y)
+float& ann::Matrix::operator()(const int x,const int y)
 {
     return elements[x * cols_ + y];
 }
 
-ann::Matrix ann::Matrix::operator*(ann::Matrix& my)
+float ann::Matrix::operator()(const int x,const int y) const
+{
+    return elements[x * cols_ + y];
+}
+
+ann::Matrix ann::Matrix::operator*(const ann::Matrix& my) const
 {
     ann::Matrix mx = *this;
     if (mx.get_cols_count() != my.get_rows_count())
@@ -48,9 +53,9 @@ ann::Matrix ann::Matrix::operator*(ann::Matrix& my)
             for (int col_result = 0; col_result < result.get_cols_count(); col_result++)
             {
                 int element = 0;
-                for (int colunaX = 0; colunaX < mx.get_cols_count(); colunaX++)
+                for (int col_x = 0; col_x < mx.get_cols_count(); col_x++)
                 {
-                    element += mx(row_result, colunaX) * my(colunaX, col_result);
+                    element += mx(row_result, col_x) * my(col_x, col_result);
                 }
                 result(row_result, col_result) = element;
             }
@@ -62,7 +67,7 @@ ann::Matrix ann::Matrix::operator*(ann::Matrix& my)
     }
 }
 
-ann::Matrix ann::Matrix::operator+(ann::Matrix& my)
+ann::Matrix ann::Matrix::operator+(const ann::Matrix& my) const
 {
     ann::Matrix mx = *this;
     if (mx.get_cols_count() != my.get_cols_count() || mx.get_rows_count() != my.get_rows_count())

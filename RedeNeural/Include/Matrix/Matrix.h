@@ -20,9 +20,10 @@ namespace ann
         ~Matrix();
         int get_rows_count() const;
         int get_cols_count() const;
-        ann::Matrix operator*(ann::Matrix& my);
-        ann::Matrix operator+(ann::Matrix& my);
+        ann::Matrix operator*(const ann::Matrix& my) const;
+        ann::Matrix operator+(const ann::Matrix& my) const;
         float& operator()(int x, int y);
+        float operator()(int x, int y) const;
         ann::Matrix& map(const std::function<float(float)>& func);
     };
 }
