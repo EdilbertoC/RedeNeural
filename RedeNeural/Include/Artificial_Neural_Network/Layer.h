@@ -11,13 +11,13 @@ namespace ann {
 		ann::Matrix bias_;
 	public:
 		Layer(int neuron_count, int weight_count, ProcessingType processing);
-		Layer(int neuron_count, int weight_count, ann::Matrix& weights, ann::Matrix& bias);
-		int get_neuron_count();
-		int get_weight_count();
-		ann::Matrix get_weights();
-		ann::Matrix get_bias();
-		void set_weights(ann::Matrix weights);
-		void set_bias(ann::Matrix bias);
-		ann::Matrix activation(ann::Matrix& input);
+		Layer(int neuron_count, int weight_count, const ann::Matrix& weights, const ann::Matrix& bias);
+		[[nodiscard]] int get_neuron_count() const;
+		[[nodiscard]] int get_weight_count() const;
+		[[nodiscard]] ann::Matrix get_weights() const;
+		[[nodiscard]] ann::Matrix get_bias() const;
+		void set_weights(const ann::Matrix& weights);
+		void set_bias(const ann::Matrix& bias);
+		[[nodiscard]] ann::Matrix activation(const ann::Matrix& input) const;
 	};
 }

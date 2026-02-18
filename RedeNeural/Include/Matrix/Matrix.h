@@ -16,10 +16,10 @@ namespace ann
 
     public:
         Matrix(int rows, int cols, ProcessingType processing);
-        Matrix(int rows, int cols, ProcessingType processing, std::vector<float> elements);
+        Matrix(int rows, int cols, ProcessingType processing, const std::vector<float>& elements);
         ~Matrix();
-        int get_rows_count() const;
-        int get_cols_count() const;
+        [[nodiscard]] int get_rows_count() const;
+        [[nodiscard]] int get_cols_count() const;
         ann::Matrix operator*(const ann::Matrix& my) const;
         ann::Matrix operator+(const ann::Matrix& my) const;
         float& operator()(int x, int y);

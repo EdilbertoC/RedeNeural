@@ -2,13 +2,13 @@
 #include <iostream>
 #include <stdexcept>
 
-ann::Matrix::Matrix(int rows, int cols, ProcessingType processing)
+ann::Matrix::Matrix(const int rows, const int cols, const ProcessingType processing)
     : rows_(rows), cols_(cols), processing_(processing), elements(std::vector<float>(rows * cols))
 {
     std::cout << "Matrix created!\n";
 }
 
-ann::Matrix::Matrix(int rows, int cols, ProcessingType processing, std::vector<float> elements)
+ann::Matrix::Matrix(const int rows, const int cols, const ProcessingType processing, const std::vector<float>& elements)
     : rows_(rows), cols_(cols), processing_(processing), elements(elements)
 {
     if ((rows * cols) != elements.size())
@@ -52,7 +52,7 @@ ann::Matrix ann::Matrix::operator*(const ann::Matrix& my) const
         {
             for (int col_result = 0; col_result < result.get_cols_count(); col_result++)
             {
-                int element = 0;
+                float element = 0;
                 for (int col_x = 0; col_x < mx.get_cols_count(); col_x++)
                 {
                     element += mx(row_result, col_x) * my(col_x, col_result);
@@ -81,7 +81,7 @@ ann::Matrix ann::Matrix::operator+(const ann::Matrix& my) const
         {
             for (int col_result = 0; col_result < result.get_cols_count(); col_result++)
             {
-                float sum = mx(row_result, col_result) + my(row_result, col_result);
+                const float sum = mx(row_result, col_result) + my(row_result, col_result);
                 result(row_result, col_result) = sum;
             }
         }
