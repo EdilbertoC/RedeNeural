@@ -3,89 +3,97 @@
 #include "Include/Matrix/Matrix.h"
 #include "Include/Artificial_Neural_Network/Layer.h"
 #include <cmath>
+#include <chrono>
 
 
 using namespace std;
 
-void DrawMatriz(ann::Matrix& matriz, int x, int y, int tamanho_celula);
+void DrawMatrix(const ann::Matrix& matrix, int x, int y, int cell_size);
 
 int main()
 {
-	double cooldown = 3;
-	double timer = 0;
-	InitWindow(1200, 1000, "Rede Neural");
-	SetTargetFPS(144);
+    setlocale(LC_NUMERIC, "");
+    float ns_layer_calc = 0;
+    constexpr double cooldown = 0.2;
+    double timer = cooldown;
+    InitWindow(1200, 1000, "Rede Neural");
+    SetTargetFPS(144);
 
-	ann::Matrix mX(2, 2, ann::ProcessingType::Host,  std::vector<float>{
-		1, 1,
-		1, 1
-	});
+    ann::Matrix mR(512, 512, ann::ProcessingType::Host);
+    mR.fill_randon(0, 10);
 
-	ann::Matrix mZ(2, 1, ann::ProcessingType::Host, std::vector<float>{
-		1,
-		0
-	});
+    ann::Matrix mX(2, 2, ann::ProcessingType::Host, std::vector<float>{
+                       1, 1,
+                       1, 1
+                   });
 
-	ann::Matrix bias(2, 1, ann::ProcessingType::Host, std::vector<float>{
-		-1,
-		0
-	});
+    ann::Matrix mZ(2, 1, ann::ProcessingType::Host, std::vector<float>{
+                       1,
+                       0
+                   });
 
-	ann::Layer l1(2, 2, mX, bias);
+    ann::Matrix bias(2, 1, ann::ProcessingType::Host, std::vector<float>{
+                         -1,
+                         0
+                     });
 
-	ann::Matrix result = l1.activation(mZ);
+    ann::Layer l1(2, 2, mX, bias);
 
-	while (!WindowShouldClose()) {
-		/*if (timer < cooldown) {
-			timer += GetFrameTime();
-		}
-		else {
-			timer = 0;
-			mZ.set_element_at(0, 0, GetRandomValue(0, 1));
-			mZ.set_element_at(1, 0, GetRandomValue(0, 1));
-			result = l1.activation(mZ);
-		}*/
+    ann::Matrix result = l1.activation(mZ);
 
-		if (IsKeyDown(KEY_SPACE)) {
-			mZ(0, 0) = GetRandomValue(0, 1);
-			mZ(1, 0) = GetRandomValue(0, 1);
-			result = l1.activation(mZ);
-		}
+    while (!WindowShouldClose())
+    {
+        if (IsKeyDown(KEY_ENTER) && timer >= cooldown)
+        {
+            timer = 0;
+            mZ(0, 0) = GetRandomValue(0, 1);
+            mZ(1, 0) = GetRandomValue(0, 1);
 
-		BeginDrawing();
-		ClearBackground(BLACK);
+            std::chrono::time_point start_layer_calc = std::chrono::steady_clock::now();
+            result = l1.activation(mZ);
+            std::chrono::time_point end_layer_calc = std::chrono::steady_clock::now();
+            std::chrono::duration duration_layer_calc = end_layer_calc - start_layer_calc;
+            ns_layer_calc = std::chrono::duration_cast<std::chrono::nanoseconds>(duration_layer_calc).count();
+        }
+        else if (timer < cooldown)
+        {
+            timer += GetFrameTime();
+        }
 
-		DrawFPS(10, 10);
-		DrawText("Rede Neural", 10, 40, 20, WHITE);
-		DrawText(TextFormat("Timer: %.2f", cooldown - timer), 10, 80, 20, WHITE);
-		DrawMatriz(mX, 600, 200, 40);
-		DrawMatriz(mZ, 200, 200, 40);
-		DrawMatriz(result, 1000, 200, 40);
-		EndDrawing();
-	}
+        BeginDrawing();
+        ClearBackground(BLACK);
 
-	CloseWindow();
-	return 0;
+        DrawFPS(10, 10);
+        DrawText("Rede Neural", 10, 40, 20, WHITE);
+        DrawText(TextFormat("Timer: %.2f", cooldown - timer), 10, 80, 20, WHITE);
+        DrawText(TextFormat("Duration Layer 1 Calc: %'.0fns", ns_layer_calc), 10, 120, 20, WHITE);
+        DrawMatrix(mR, 600, 400, 10);
+        DrawMatrix(mZ, 200, 400, 1);
+        DrawMatrix(result, 1000, 400, 10);
+        EndDrawing();
+    }
+
+    CloseWindow();
+    return 0;
 }
 
-void DrawMatriz(ann::Matrix& matriz, int x, int y, int tamanho_celula) {
-	int espacamento_celula = tamanho_celula / 2;
-	int tamanho_font = tamanho_celula / 2;
+void DrawMatrix(const ann::Matrix& matrix, const int x, const int y, const int cell_size)
+{
+    const int cell_spacing = cell_size / 2;
+    const int font_size = cell_size / 2;
+    const double width = (matrix.get_cols_count() * cell_size) + ((matrix.get_cols_count() - 1) * cell_spacing);
+    const double height = (matrix.get_rows_count() * cell_size) + ((matrix.get_rows_count() - 1) * cell_spacing);
+    const double initial_width = x - (width / 2);
+    const double initial_height = y - (height / 2);
 
-	double largura = (matriz.get_cols_count() * tamanho_celula) + ((matriz.get_cols_count() - 1) * espacamento_celula);
-	double altura = (matriz.get_rows_count() * tamanho_celula) + ((matriz.get_rows_count() - 1) * espacamento_celula);
-	double largura_inicial = x - (largura / 2);
-	double altura_inicial = y - (altura / 2);
-	double largura_final = x + (largura / 2);
-	double altura_final = y + (altura / 2);
+    for (int i = 0; i < matrix.get_rows_count(); i++)
+    {
+        for (int j = 0; j < matrix.get_cols_count(); j++)
+        {
+            const int cell_y = (i * cell_size) + (i * cell_spacing) + (cell_size / 2) + initial_height;
+            const int cell_x = (j * cell_size) + (j * cell_spacing) + (cell_size / 2) + initial_width;
 
-	for (int i = 0; i < matriz.get_rows_count(); i++) {
-		for (int j = 0; j < matriz.get_cols_count(); j++) {
-			int cell_y = (i * tamanho_celula) + (i * espacamento_celula) + (tamanho_celula / 2) + altura_inicial;
-			int cell_x = (j * tamanho_celula) + (j * espacamento_celula) + (tamanho_celula / 2) + largura_inicial;
-
-			//DrawCircle(cell_x, cell_y, tamanho_celula / 2, RED);
-			DrawText(TextFormat("%.0f", matriz(i, j)), cell_x - tamanho_font, cell_y - tamanho_font / 2, tamanho_font, WHITE);
-		}
-	}
+            DrawText(TextFormat("%.0f", matrix(i, j)), cell_x - font_size, cell_y - font_size / 2, font_size, WHITE);
+        }
+    }
 }

@@ -107,6 +107,16 @@ ann::Matrix& ann::Matrix::map(const std::function<float(float)>& func)
     }
 }
 
+ann::Matrix& ann::Matrix::fill_randon(int min, int max)
+{
+    for (int i = 0; i < rows_ * cols_; i++)
+    {
+        elements[i] = 10;
+    }
+
+    return *this;
+}
+
 ann::Matrix::~Matrix()
 {
     std::cout << "Matrix deleted!\n";
