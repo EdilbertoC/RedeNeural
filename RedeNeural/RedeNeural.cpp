@@ -1,7 +1,7 @@
 ﻿#include "raylib.h"
 #include "RedeNeural.h"
-#include "Include/Matrix/Matrix.h"
-#include "Include/Artificial_Neural_Network/Layer.h"
+#include "Matrix/Matrix.h"
+#include "Artificial_Neural_Network/Layer.h"
 #include <cmath>
 #include <chrono>
 
@@ -9,6 +9,7 @@
 using namespace std;
 
 void DrawMatrix(const ann::Matrix& matrix, int x, int y, int cell_size);
+Texture2D matrix_to_image(Image& img, const ann::Matrix& matrix);
 
 int main()
 {
@@ -20,7 +21,11 @@ int main()
     SetTargetFPS(144);
 
     ann::Matrix mR(512, 512, ann::ProcessingType::Host);
-    mR.fill_randon(0, 10);
+    mR.fill_randon(-1, 1);
+
+    Image img = GenImageColor(mR.get_cols_count(), mR.get_rows_count(), BLACK);
+    Texture2D texture = matrix_to_image(img, mR);
+    UnloadImage(img);
 
     ann::Matrix mX(2, 2, ann::ProcessingType::Host, std::vector<float>{
                        1, 1,
@@ -67,9 +72,9 @@ int main()
         DrawText("Rede Neural", 10, 40, 20, WHITE);
         DrawText(TextFormat("Timer: %.2f", cooldown - timer), 10, 80, 20, WHITE);
         DrawText(TextFormat("Duration Layer 1 Calc: %'.0fns", ns_layer_calc), 10, 120, 20, WHITE);
-        DrawMatrix(mR, 600, 400, 10);
-        DrawMatrix(mZ, 200, 400, 1);
-        DrawMatrix(result, 1000, 400, 10);
+        DrawMatrix(mZ, 200, 400, 40);
+        DrawMatrix(mX, 600, 400, 40);
+        DrawMatrix(result, 1000, 400, 40);
         EndDrawing();
     }
 
@@ -96,4 +101,19 @@ void DrawMatrix(const ann::Matrix& matrix, const int x, const int y, const int c
             DrawText(TextFormat("%.0f", matrix(i, j)), cell_x - font_size, cell_y - font_size / 2, font_size, WHITE);
         }
     }
+}
+
+Texture2D matrix_to_image(Image& img, const ann::Matrix& matrix)
+{
+    for (int x = 0; x < matrix.get_rows_count(); x++)
+    {
+        for (int y = 0; y < matrix.get_cols_count(); y++)
+        {
+            const float val = matrix(x, y);
+            unsigned char tone_val = (unsigned char)(((val + 1.0f) / 2) * 255.0f);
+            Color color = {tone_val, tone_val, tone_val, 255};
+            ImageDrawPixel(&img, x, y, color);
+        }
+    }
+    return LoadTextureFromImage(img);
 }

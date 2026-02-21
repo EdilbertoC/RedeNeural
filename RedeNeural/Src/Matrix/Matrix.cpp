@@ -1,6 +1,7 @@
 #include "Matrix/Matrix.h"
 #include <iostream>
 #include <stdexcept>
+#include <random>
 
 ann::Matrix::Matrix(const int rows, const int cols, const ProcessingType processing)
     : rows_(rows), cols_(cols), processing_(processing), elements(std::vector<float>(rows * cols))
@@ -107,11 +108,15 @@ ann::Matrix& ann::Matrix::map(const std::function<float(float)>& func)
     }
 }
 
-ann::Matrix& ann::Matrix::fill_randon(int min, int max)
+ann::Matrix& ann::Matrix::fill_randon(const float min, const float max)
 {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> dist(min, max);
+
     for (int i = 0; i < rows_ * cols_; i++)
     {
-        elements[i] = 10;
+        elements[i] = dist(gen);
     }
 
     return *this;

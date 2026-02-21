@@ -25,6 +25,6 @@ namespace ann
         float& operator()(int x, int y);
         float operator()(int x, int y) const;
         ann::Matrix& map(const std::function<float(float)>& func);
-        ann::Matrix& fill_randon(int min, int max);
+        ann::Matrix& fill_randon(float min, float max);
     };
 }
