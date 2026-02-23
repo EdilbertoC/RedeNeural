@@ -14,7 +14,7 @@ set(CORE_SOURCES
         "Include/Matrix/Matrix.h"
         "Include/Artificial_Neural_Network/Layer.h"
         "Src/Artificial_Neural_Network/Layer.cpp"
-        "Src/Matrix/TensorComputeCore.cpp"
+        "Src/Matrix/TensorComputeCore.cu"
         "Include/Matrix/TensorComputeCore.h"
         "Include/Matrix/ProcessingType.h"
 )

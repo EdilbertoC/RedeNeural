@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <random>
 
+#include "Matrix/TensorComputeCore.h"
+
 ann::Matrix::Matrix(const int rows, const int cols, const ProcessingType processing)
     : rows_(rows), cols_(cols), processing_(processing), elements(std::vector<float>(rows * cols))
 {
@@ -27,12 +29,12 @@ int ann::Matrix::get_rows_count() const
     return rows_;
 }
 
-float& ann::Matrix::operator()(const int x,const int y)
+float& ann::Matrix::operator()(const int x, const int y)
 {
     return elements[x * cols_ + y];
 }
 
-float ann::Matrix::operator()(const int x,const int y) const
+float ann::Matrix::operator()(const int x, const int y) const
 {
     return elements[x * cols_ + y];
 }
@@ -44,6 +46,7 @@ ann::Matrix ann::Matrix::operator*(const ann::Matrix& my) const
     {
         throw std::invalid_argument("Invalid multiplication.");
     }
+
     if (processing_ == ProcessingType::Host)
     {
         ann::Matrix result(mx.get_rows_count(), my.get_cols_count(), ProcessingType::Host);
@@ -60,9 +63,14 @@ ann::Matrix ann::Matrix::operator*(const ann::Matrix& my) const
             }
         }
         return result;
-    }else
+    }
+    else if (processing_ == ProcessingType::Device)
     {
-        throw std::invalid_argument("WIP");
+        return ann::TensorComputeCore::multiply_matrix(mx, my);
+    }
+    else
+    {
+        throw std::runtime_error("Not implemented");
     }
 }
 
@@ -85,7 +93,8 @@ ann::Matrix ann::Matrix::operator+(const ann::Matrix& my) const
             }
         }
         return result;
-    }else
+    }
+    else
     {
         throw std::invalid_argument("WIP");
     }
@@ -95,12 +104,13 @@ ann::Matrix& ann::Matrix::map(const std::function<float(float)>& func)
 {
     if (processing_ == ProcessingType::Host)
     {
-    for (int i = 0; i < rows_ * cols_; i++)
-    {
-        elements[i] = func(elements[i]);
+        for (int i = 0; i < rows_ * cols_; i++)
+        {
+            elements[i] = func(elements[i]);
+        }
+        return *this;
     }
-    return *this;
-    }else
+    else
     {
         throw std::invalid_argument("WIP");
     }
