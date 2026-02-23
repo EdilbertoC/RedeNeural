@@ -6,7 +6,6 @@
 ann::Matrix::Matrix(const int rows, const int cols, const ProcessingType processing)
     : rows_(rows), cols_(cols), processing_(processing), elements(std::vector<float>(rows * cols))
 {
-    std::cout << "Matrix created!\n";
 }
 
 ann::Matrix::Matrix(const int rows, const int cols, const ProcessingType processing, const std::vector<float>& elements)
@@ -16,7 +15,6 @@ ann::Matrix::Matrix(const int rows, const int cols, const ProcessingType process
     {
         throw std::invalid_argument("Size does not match the indicated size.");
     }
-    std::cout << "Matrix created!\n";
 }
 
 int ann::Matrix::get_cols_count() const
@@ -108,7 +106,7 @@ ann::Matrix& ann::Matrix::map(const std::function<float(float)>& func)
     }
 }
 
-ann::Matrix& ann::Matrix::fill_randon(const float min, const float max)
+ann::Matrix& ann::Matrix::fill_random(const float min, const float max)
 {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -124,5 +122,4 @@ ann::Matrix& ann::Matrix::fill_randon(const float min, const float max)
 
 ann::Matrix::~Matrix()
 {
-    std::cout << "Matrix deleted!\n";
 }

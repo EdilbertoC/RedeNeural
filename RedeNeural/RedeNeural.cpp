@@ -21,7 +21,7 @@ int main()
     SetTargetFPS(144);
 
     ann::Matrix mR(512, 512, ann::ProcessingType::Host);
-    mR.fill_randon(-1, 1);
+    mR.fill_random(-1, 1);
 
     Image img = GenImageColor(mR.get_cols_count(), mR.get_rows_count(), BLACK);
     Texture2D texture = matrix_to_image(img, mR);
