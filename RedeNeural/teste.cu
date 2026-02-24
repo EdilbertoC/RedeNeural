@@ -1,7 +1,7 @@
-#include <stdio.h>
+#include <cstdio>
 #include <cuda_runtime.h>
 #include <chrono>
-#include <locale.h>
+#include <locale>
 
 __global__ void test_cuda(float* d_out, int iterations) {
     int idx = threadIdx.x + blockIdx.x * blockDim.x;

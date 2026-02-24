@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <functional>
+#include <string>
 
 #include "ProcessingType.h"
 
@@ -12,7 +13,7 @@ namespace ann
         int rows_;
         int cols_;
         ProcessingType processing_;
-        std::vector<float> elements;
+        std::vector<float> elements_;
 
     public:
         Matrix(int rows, int cols, ProcessingType processing);
@@ -20,11 +21,14 @@ namespace ann
         ~Matrix();
         [[nodiscard]] int get_rows_count() const;
         [[nodiscard]] int get_cols_count() const;
+        [[nodiscard]] std::vector<float> get_elements() const;
+        void set_elements(const std::vector<float>& elements);
         ann::Matrix operator*(const ann::Matrix& my) const;
         ann::Matrix operator+(const ann::Matrix& my) const;
         float& operator()(int x, int y);
         float operator()(int x, int y) const;
         ann::Matrix& map(const std::function<float(float)>& func);
         ann::Matrix& fill_random(float min, float max);
+        [[nodiscard]] std::string to_string() const;
     };
 }

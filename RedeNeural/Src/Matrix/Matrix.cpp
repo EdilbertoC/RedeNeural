@@ -6,17 +6,27 @@
 #include "Matrix/TensorComputeCore.h"
 
 ann::Matrix::Matrix(const int rows, const int cols, const ProcessingType processing)
-    : rows_(rows), cols_(cols), processing_(processing), elements(std::vector<float>(rows * cols))
+    : rows_(rows), cols_(cols), processing_(processing), elements_(std::vector<float>(rows * cols))
 {
 }
 
 ann::Matrix::Matrix(const int rows, const int cols, const ProcessingType processing, const std::vector<float>& elements)
-    : rows_(rows), cols_(cols), processing_(processing), elements(elements)
+    : rows_(rows), cols_(cols), processing_(processing), elements_(elements)
 {
     if ((rows * cols) != elements.size())
     {
         throw std::invalid_argument("Size does not match the indicated size.");
     }
+}
+
+std::vector<float> ann::Matrix::get_elements() const
+{
+    return elements_;
+}
+
+void ann::Matrix::set_elements(const std::vector<float>& elements)
+{
+    elements_ = elements;
 }
 
 int ann::Matrix::get_cols_count() const
@@ -31,12 +41,12 @@ int ann::Matrix::get_rows_count() const
 
 float& ann::Matrix::operator()(const int x, const int y)
 {
-    return elements[x * cols_ + y];
+    return elements_[x * cols_ + y];
 }
 
 float ann::Matrix::operator()(const int x, const int y) const
 {
-    return elements[x * cols_ + y];
+    return elements_[x * cols_ + y];
 }
 
 ann::Matrix ann::Matrix::operator*(const ann::Matrix& my) const
@@ -106,7 +116,7 @@ ann::Matrix& ann::Matrix::map(const std::function<float(float)>& func)
     {
         for (int i = 0; i < rows_ * cols_; i++)
         {
-            elements[i] = func(elements[i]);
+            elements_[i] = func(elements_[i]);
         }
         return *this;
     }
@@ -124,10 +134,25 @@ ann::Matrix& ann::Matrix::fill_random(const float min, const float max)
 
     for (int i = 0; i < rows_ * cols_; i++)
     {
-        elements[i] = dist(gen);
+        elements_[i] = dist(gen);
     }
 
     return *this;
+}
+
+std::string ann::Matrix::to_string() const
+{
+    std::string result;
+    for (int i = 0; i < rows_; i++)
+    {
+        result += "[ ";
+        for (int j = 0; j < cols_; j++)
+        {
+            result += std::to_string((*this)(i, j)) + " | ";
+        }
+        result += " ]\n";
+    }
+    return result;
 }
 
 ann::Matrix::~Matrix()

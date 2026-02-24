@@ -26,17 +26,29 @@ int main()
 
     printf("1024² Host: %'fms \n", ms_host);
 
-    ann::Matrix mA(1024, 1024, ann::ProcessingType::Device);
-    mA.fill_random(-1, 1);
+    ann::Matrix mA(3, 3, ann::ProcessingType::Device, std::vector<float>{
+                       1, 2, 3,
+                       4, 5, 6,
+                       7, 8, 0
+                   });
+    std::cout << mA.to_string() << "\n";
 
-    ann::Matrix mB(1024, 1024, ann::ProcessingType::Device);
-    mB.fill_random(-1, 1);
+
+    ann::Matrix mB(3, 3, ann::ProcessingType::Device, std::vector<float>{
+                       1, 2, 3,
+                       4, 5, 6,
+                       7, 8, 0
+                   });
+    std::cout << mB.to_string() << "\n";
+
 
     std::chrono::time_point const start_device = std::chrono::steady_clock::now();
     ann::Matrix result_device = mA * mB;
     std::chrono::time_point const end_device = std::chrono::steady_clock::now();
     std::chrono::duration const time_device = end_device - start_device;
     float const ms_device = std::chrono::duration<float, std::milli>(time_device).count();
+
+    std::cout << result_device.to_string();
 
     printf("1024² Device: %'fms", ms_device);
 
