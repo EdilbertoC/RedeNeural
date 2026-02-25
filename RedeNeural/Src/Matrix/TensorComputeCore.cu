@@ -7,16 +7,18 @@
 
 __global__ void multiply(const float* d_mx, const float* d_my, float* d_result, const int rows, const int cols, const int cols_mx, const int cols_my)
 {
-    //x * cols_ + y
-    int id = threadIdx.x + blockDim.x * threadIdx.y;
+    const int row = blockIdx.x;
+    const int col = threadIdx.x;
+    //row * cols_total + col
+    const int id = row * blockDim.x + col;
 
     float sum = 0;
     for (int i = 0; i < cols; i ++)
     {
         //row = [threadIdx.x, i]
-        const int mx_id = threadIdx.x * cols_mx + i;
+        const int mx_id = row * cols_mx + i;
         //col = [i, threadIdx.y]
-        const int my_id = i * cols_my + threadIdx.y;
+        const int my_id = i * cols_my + col;
         sum += d_mx[mx_id] * d_my[my_id];
     }
     d_result[id] = sum;
@@ -52,7 +54,7 @@ ann::Matrix ann::TensorComputeCore::multiply_matrix(const ann::Matrix& mx, const
 
     ann::Matrix result(mx.get_rows_count(), my.get_cols_count(), ProcessingType::Device);
 
-    std::vector<float> elements_result(mx.get_rows_count(), my.get_cols_count());
+    std::vector<float> elements_result(mx.get_rows_count() * my.get_cols_count());
 
     int const size_mx = mx.get_rows_count() * mx.get_cols_count() * sizeof(float);
     int const size_result = elements_result.size() * sizeof(float);
