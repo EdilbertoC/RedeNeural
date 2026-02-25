@@ -5,20 +5,21 @@
 #include <device_launch_parameters.h>
 #include <iostream>
 
-__global__ void multiply(const float* d_mx, const float* d_my, float* d_result, const int rows, const int cols, const int cols_mx, const int cols_my)
+__global__ void multiply(const float* d_mx, const float* d_my, float* d_result, const int cols, const int cols_mx,
+                         const int cols_my)
 {
-    const int row = blockIdx.x;
-    const int col = threadIdx.x;
+    const size_t row = blockIdx.x;
+    const size_t col = threadIdx.x;
     //row * cols_total + col
-    const int id = row * blockDim.x + col;
+    const size_t id = row * blockDim.x + col;
 
     float sum = 0;
-    for (int i = 0; i < cols; i ++)
+    for (int i = 0; i < cols; i++)
     {
         //row = [threadIdx.x, i]
-        const int mx_id = row * cols_mx + i;
+        const size_t mx_id = row * cols_mx + i;
         //col = [i, threadIdx.y]
-        const int my_id = i * cols_my + col;
+        const size_t my_id = i * cols_my + col;
         sum += d_mx[mx_id] * d_my[my_id];
     }
     d_result[id] = sum;
@@ -31,15 +32,16 @@ bool verify_cuda_device()
     if (cudaError_t const error = cudaGetDeviceCount(&device_count); error != cudaSuccess)
     {
         std::cout << "[CUDA ERROR] Failed to communicate with the GPU: "
-                  << cudaGetErrorString(error) << "\n";
+            << cudaGetErrorString(error) << "\n";
         return false;
     }
     else if (device_count == 0)
     {
         std::cout << "[CUDA ERROR] No CUDA GPUs found: "
-                  << cudaGetErrorString(error) << "\n";
+            << cudaGetErrorString(error) << "\n";
         return false;
-    }else
+    }
+    else
     {
         return true;
     }
@@ -56,20 +58,21 @@ ann::Matrix ann::TensorComputeCore::multiply_matrix(const ann::Matrix& mx, const
 
     std::vector<float> elements_result(mx.get_rows_count() * my.get_cols_count());
 
-    int const size_mx = mx.get_rows_count() * mx.get_cols_count() * sizeof(float);
-    int const size_result = elements_result.size() * sizeof(float);
-    int const size_my = my.get_rows_count() * my.get_cols_count() * sizeof(float);
+    const size_t size_mx = mx.get_rows_count() * mx.get_cols_count() * sizeof(float);
+    const size_t size_result = elements_result.size() * sizeof(float);
+    const size_t size_my = my.get_rows_count() * my.get_cols_count() * sizeof(float);
     float* d_mx;
     float* d_my;
     float* d_result;
 
-    cudaMalloc((void**)&d_mx, size_mx);
-    cudaMalloc((void**)&d_my, size_my);
-    cudaMalloc((void**)&d_result, size_result);
+    cudaMalloc(reinterpret_cast<void**>(&d_mx), size_mx);
+    cudaMalloc(reinterpret_cast<void**>(&d_my), size_my);
+    cudaMalloc(reinterpret_cast<void**>(&d_result), size_result);
     cudaMemcpy(d_mx, mx.get_elements().data(), size_mx, cudaMemcpyHostToDevice);
     cudaMemcpy(d_my, my.get_elements().data(), size_my, cudaMemcpyHostToDevice);
 
-    multiply<<< mx.get_rows_count(), my.get_cols_count() >>>(d_mx, d_my, d_result, result.get_rows_count(), result.get_cols_count(), mx.get_cols_count(), my.get_cols_count());
+    multiply<<< mx.get_rows_count(), my.get_cols_count() >>>(d_mx, d_my, d_result, result.get_cols_count(),
+                                                             mx.get_cols_count(), my.get_cols_count());
 
     cudaMemcpy(elements_result.data(), d_result, size_result, cudaMemcpyDeviceToHost);
     result.set_elements(elements_result);
