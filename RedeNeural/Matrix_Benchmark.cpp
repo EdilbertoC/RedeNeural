@@ -4,18 +4,20 @@
 #include "Artificial_Neural_Network/Layer.h"
 #include <cmath>
 #include <chrono>
+#include <cuda_runtime_api.h>
 
 using namespace std;
 
 int main()
 {
-    setlocale(LC_NUMERIC, "");
+    constexpr size_t magnitude = 1024;
+    std::cout.imbue(std::locale(""));
 
     std::cout << "Benchmark init:\n";
-    ann::Matrix mX(1024, 1024, ann::ProcessingType::Host);
+    ann::Matrix mX(magnitude, magnitude, ann::ProcessingType::Host);
     mX.fill_random(-1, 1);
 
-    ann::Matrix mY(1024, 1024, ann::ProcessingType::Host);
+    ann::Matrix mY(magnitude, magnitude, ann::ProcessingType::Host);
     mY.fill_random(-1, 1);
 
     std::chrono::time_point const start_host = std::chrono::steady_clock::now();
@@ -24,33 +26,21 @@ int main()
     std::chrono::duration const time_host = end_host - start_host;
     float const ms_host = std::chrono::duration<float, std::milli>(time_host).count();
 
-    printf("1024² Host: %'fms \n", ms_host);
+    std::cout << magnitude << "^2 x " << magnitude << "^2 Host: " << ms_host << " ms\n";
 
-    ann::Matrix mA(3, 3, ann::ProcessingType::Device, std::vector<float>{
-                       1, 2, 3,
-                       4, 5, 6,
-                       7, 8, 0
-                   });
-    std::cout << mA.to_string() << "\n";
+    ann::Matrix mX_device(magnitude, magnitude, ann::ProcessingType::Device);
+    mX_device.fill_random(-1, 1);
 
-
-    ann::Matrix mB(3, 3, ann::ProcessingType::Device, std::vector<float>{
-                       1, 2, 3,
-                       4, 5, 6,
-                       7, 8, 0
-                   });
-    std::cout << mB.to_string() << "\n";
-
+    ann::Matrix mY_device(magnitude, magnitude, ann::ProcessingType::Device);
+    mY_device.fill_random(-1, 1);
 
     std::chrono::time_point const start_device = std::chrono::steady_clock::now();
-    ann::Matrix result_device = mA * mB;
+    ann::Matrix result_device = mX_device * mY_device;
+    cudaDeviceSynchronize();
     std::chrono::time_point const end_device = std::chrono::steady_clock::now();
     std::chrono::duration const time_device = end_device - start_device;
     float const ms_device = std::chrono::duration<float, std::milli>(time_device).count();
 
-    std::cout << result_device.to_string();
-
-    printf("1024² Device: %'fms", ms_device);
-
+    std::cout << magnitude << "^2 x " << magnitude << "^2 Device: " << ms_device << " ms\n";
     return 0;
 }

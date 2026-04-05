@@ -1,9 +1,8 @@
 #include "Matrix/Matrix.h"
-#include <iostream>
 #include <stdexcept>
 #include <random>
-
 #include "Matrix/TensorComputeCore.h"
+
 
 ann::Matrix::Matrix(const int rows, const int cols, const ProcessingType processing)
     : rows_(rows), cols_(cols), processing_(processing), elements_(std::vector<float>(rows * cols))
